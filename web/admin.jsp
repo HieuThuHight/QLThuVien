@@ -16,9 +16,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Trang quản trị - Cổng thông tin Thư viện UNETI</title>
+        <title>Trang quản trị - Cổng thông tin Thư viện UNETIaa</title>
 
-        <style>aa
+        <style>
             body {
                 margin: 0;
                 font-family: 'Arial', sans-serif;
