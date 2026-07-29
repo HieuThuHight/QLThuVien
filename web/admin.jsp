@@ -3,8 +3,15 @@
     Created on : Jul 27, 2026, 3:04:17 PM
     Author     : Do Hieu
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="model.BorrowingInfo" %>
+<%
+    Integer totalBooks = (Integer) request.getAttribute("totalBooks");
+    Integer totalReaders = (Integer) request.getAttribute("totalReaders");
+    Integer currentBorrowings = (Integer) request.getAttribute("currentBorrowings");
+    Integer overdueCount = (Integer) request.getAttribute("overdueCount");
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -96,6 +103,43 @@
                 text-align: center;
             }
 
+            .action-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 16px;
+                margin-top: 20px;
+            }
+
+            .action-card {
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                overflow: hidden;
+                transition: transform 0.18s ease, box-shadow 0.18s ease;
+            }
+
+            .action-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            }
+
+            .action-card a {
+                display: block;
+                padding: 18px 20px;
+                color: #0056A0;
+                font-weight: bold;
+                text-decoration: none;
+                font-size: 15px;
+            }
+
+            .action-card a span {
+                display: block;
+                margin-top: 8px;
+                color: #666;
+                font-size: 13px;
+                font-weight: normal;
+            }
+
             .stat-box .num {
                 font-size: 24px;
                 font-weight: bold;
@@ -157,9 +201,11 @@
         </div>
 
         <!-- MENU DÀNH CHO NHÂN VIÊN/ADMIN (nghiệp vụ quản lý) -->
+        <%@ page import="java.util.List" %>
+        <%@ page import="model.BorrowingInfo" %>
         <div class="main-nav">
-            <a href="admin.jsp" class="active">Trang quản trị</a>
-            <a href="sach.jsp">Quản lý sách</a>
+            <a href="admin" class="active">Trang quản trị</a>
+            <a href="books">Quản lý sách</a>
             <a href="phieumuon.jsp">Mượn / Trả sách</a>
             <a href="docgia.jsp">Độc giả</a>
             <a href="nhanvien.jsp">Nhân viên</a>
@@ -173,10 +219,22 @@
         <div class="content-container">
 
             <div class="stats-strip">
-                <div class="stat-box"><div class="num"></div><div class="lbl">Tổng đầu sách</div></div>
-                <div class="stat-box"><div class="num"></div><div class="lbl">Độc giả</div></div>
-                <div class="stat-box"><div class="num"></div><div class="lbl">Đang mượn</div></div>
-                <div class="stat-box"><div class="num"></div><div class="lbl">Quá hạn</div></div>
+                <div class="stat-box"><div class="num"><%= totalBooks != null ? totalBooks : 0 %></div><div class="lbl">Tổng đầu sách</div></div>
+                <div class="stat-box"><div class="num"><%= totalReaders != null ? totalReaders : 0 %></div><div class="lbl">Độc giả</div></div>
+                <div class="stat-box"><div class="num"><%= currentBorrowings != null ? currentBorrowings : 0 %></div><div class="lbl">Đang mượn</div></div>
+                <div class="stat-box"><div class="num"><%= overdueCount != null ? overdueCount : 0 %></div><div class="lbl">Quá hạn</div></div>
+            </div>
+
+            <div class="section-title">Chức năng nhanh</div>
+            <div class="action-grid">
+                <div class="action-card"><a href="books">Quản lý sách<span>Thêm, sửa, xem danh sách sách</span></a></div>
+                <div class="action-card"><a href="phieumuon.jsp">Mượn / Trả sách<span>Quản lý phiếu mượn trả</span></a></div>
+                <div class="action-card"><a href="docgia.jsp">Quản lý độc giả<span>Danh sách và thẻ độc giả</span></a></div>
+                <div class="action-card"><a href="nhanvien.jsp">Quản lý nhân viên<span>Thông tin nhân viên thư viện</span></a></div>
+                <div class="action-card"><a href="nhacungcap.jsp">Nhà cung cấp<span>Thông tin nhà cung cấp</span></a></div>
+                <div class="action-card"><a href="phieunhap.jsp">Nhập sách<span>Quản lý phiếu nhập và kho</span></a></div>
+                <div class="action-card"><a href="phieuphat.jsp">Phiếu phạt<span>Quản lý phạt quá hạn</span></a></div>
+                <div class="action-card"><a href="doanhthu.jsp">Thống kê doanh thu<span>Báo cáo thu chi</span></a></div>
             </div>
 
             <div class="section-title">Phiếu mượn gần đây</div>
@@ -188,7 +246,25 @@
                     <th>Hạn trả</th>
                     <th>Trạng thái</th>
                 </tr>
-                <!-- TODO: lặp danh sách phiếu mượn ra đây -->
+                <%
+                    List<BorrowingInfo> recentBorrowings = (List<BorrowingInfo>) request.getAttribute("recentBorrowings");
+                    if (recentBorrowings != null && !recentBorrowings.isEmpty()) {
+                        for (BorrowingInfo borrowing : recentBorrowings) {
+                %>
+                <tr>
+                    <td><%= borrowing.getLoanId() %></td>
+                    <td><%= borrowing.getReaderName() %></td>
+                    <td><%= borrowing.getFormattedBorrowDate() %></td>
+                    <td><%= borrowing.getDueDate() %></td>
+                    <td><%= borrowing.getStatus() %></td>
+                </tr>
+                <%      }
+                    } else {
+                %>
+                <tr>
+                    <td colspan="5">Không có dữ liệu.</td>
+                </tr>
+                <% } %>
             </table>
 
         </div>

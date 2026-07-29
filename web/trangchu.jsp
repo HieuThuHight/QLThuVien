@@ -187,7 +187,7 @@
         <!-- MENU DÀNH CHO ĐỘC GIẢ (chỉ chức năng đọc/tra cứu) -->
         <div class="main-nav">
             <a href="trangchu.jsp" class="active">Trang chủ</a>
-            <a href="sach.jsp">Sách</a>
+            <a href="books">Sách</a>
             <a href="lichsumuon.jsp">Lịch sử mượn</a>
             <a href="gioithieu.jsp">Giới thiệu thư viện</a>
             <a href="dangnhap.jsp">Đăng nhập</a>
@@ -195,7 +195,7 @@
 
         <div class="search-container">
             <div class="search-title">TÌM KIẾM SÁCH</div>
-            <form action="" method="GET">
+            <form action="books" method="GET">
                 <input type="text" name="keyword" class="search-input" placeholder="Nhập tên sách hoặc tác giả..." />
                 <button type="submit" class="search-btn">TÌM KIẾM</button>
             </form>
